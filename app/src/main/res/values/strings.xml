@@ -600,6 +600,9 @@
     <string name="settings_go_log_heading" translatable="true">Log level</string>
     <string name="settings_go_log_desc" translatable="true">For debugging purposes</string>
 
+    <string name="settings_purge_log_heading" translatable="true">Log lifespan</string>
+    <string name="settings_purge_log_desc" translatable="true">Select maximum lifespan of logs</string>
+
     <string name="settings_rinr_heading" translatable="true">Loopback (experimental)</string>
     <string name="settings_rinr_desc_disabled" translatable="true">Route Rethink\'s own traffic, like blocklist downloads, connectivity checks, DNS connections, back into the tunnel.</string>
     <string name="settings_rinr_desc_enabled" translatable="true">Routing Rethink\'s own traffic through the tunnel. Unless you know what you\'re doing, turn it off.</string>
