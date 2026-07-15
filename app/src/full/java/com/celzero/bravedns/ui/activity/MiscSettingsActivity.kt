@@ -593,6 +593,10 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
             logEvent("Check for app update set to $b")
         }
 
+        b.settingsPurgeLogRl.setOnClickListener {
+            enableAfterDelay(CLICK_DELAY_SHORT_MS, b.settingsPurgeLogRl)
+            showPurgeLogDialog()
+        }
 
         b.settingsGoLogRl.setOnClickListener {
             enableAfterDelay(CLICK_DELAY_SHORT_MS, b.settingsGoLogRl)
@@ -765,6 +769,32 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
 
             logEvent("Firewall bubble disabled")
         }
+    }
+
+    private fun showPurgeLogDialog() {
+        val alertBuilder = MaterialAlertDialogBuilder(this, R.style.App_Dialog_NoDim)
+        alertBuilder.setTitle(getString(R.string.settings_purge_log_heading))
+        val items =
+            arrayOf(
+                getString(R.string.settings_purge_interval_dialog_option_0),
+                getString(R.string.settings_purge_interval_dialog_option_1),
+                getString(R.string.settings_purge_interval_dialog_option_2),
+                getString(R.string.settings_purge_interval_dialog_option_3),
+                getString(R.string.settings_purge_interval_dialog_option_4),
+                getString(R.string.settings_purge_interval_dialog_option_5),
+                getString(R.string.settings_purge_interval_dialog_option_6),
+            )
+        val checkedItem = persistentState.logLifespan.toInt()
+        alertBuilder.setSingleChoiceItems(items, checkedItem) { dialog, which ->
+            dialog.dismiss()
+            if (checkedItem == which) {
+                return@setSingleChoiceItems
+            }
+            return@setSingleChoiceItems
+
+        }
+
+        alertBuilder.create().show()
     }
 
     private fun showGoLoggerDialog() {
