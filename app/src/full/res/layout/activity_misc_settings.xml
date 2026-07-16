@@ -638,7 +638,7 @@
                     android:layout_marginEnd="16dp" />
 
                 <RelativeLayout
-                    android:id="@+id/settings_purge_log_rl"
+                    android:id="@+id/settings_log_lifespan_rl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
@@ -646,7 +646,7 @@
                     android:paddingBottom="15dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/settings_purge_log_icon"
+                        android:id="@+id/settings_log_lifespan_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -661,29 +661,29 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/settings_activity_purge_log_img"
-                        android:layout_toEndOf="@id/settings_purge_log_icon"
+                        android:layout_toStartOf="@id/settings_activity_log_lifespan_img"
+                        android:layout_toEndOf="@id/settings_log_lifespan_icon"
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/gen_settings_purge_log_txt"
+                            android:id="@+id/gen_settings_log_lifespan_txt"
                             style="@style/TextAppearance.Material3.BodyLarge.Emphasized"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_purge_log_heading" />
+                            android:text="@string/settings_log_lifespan_heading" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/gen_settings_purge_log_desc"
+                            android:id="@+id/gen_settings_log_lifespan_desc"
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="3dp"
-                            android:text="@string/settings_purge_log_desc"
+                            android:text="@string/settings_log_lifespan_dialog_option_6"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/settings_activity_purge_log_img"
+                        android:id="@+id/settings_activity_log_lifespan_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"

@@ -323,7 +323,7 @@ class PersistentState(context: Context) : SimpleKrate(context), KoinComponent {
     var goLoggerLevel by longPref("go_logger_level").withDefault<Long>(3)
 
     // log lifespan, default 6 -> 7 days
-    var logLifespan by longPref("log_lifespan").withDefault<Long>(6)
+    var logLifespan by stringPref("log_lifespan").withDefault<String>("7 days")
 
     // firewall bubble feature toggle
     var firewallBubbleEnabled by booleanPref("pref_firewall_bubble_enabled").withDefault<Boolean>(false)

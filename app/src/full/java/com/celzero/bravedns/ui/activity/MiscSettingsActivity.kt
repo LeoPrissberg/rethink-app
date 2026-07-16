@@ -74,14 +74,12 @@ import com.celzero.bravedns.util.Constants
 import com.celzero.bravedns.util.FirebaseErrorReporting
 import com.celzero.bravedns.util.FirebaseErrorReporting.TOKEN_LENGTH
 import com.celzero.bravedns.util.FirebaseErrorReporting.TOKEN_REGENERATION_PERIOD_DAYS
-import com.celzero.bravedns.util.NewSettingsManager
 import com.celzero.bravedns.util.NotificationActionType
 import com.celzero.bravedns.util.PcapMode
 import com.celzero.bravedns.util.SnackbarHelper
 import com.celzero.bravedns.util.Themes
 import com.celzero.bravedns.util.Themes.Companion.getCurrentTheme
 import com.celzero.bravedns.util.UIUtils.openUrl
-import com.celzero.bravedns.util.UIUtils.setBadgeDotVisible
 import com.celzero.bravedns.util.Utilities
 import com.celzero.bravedns.util.Utilities.delay
 import com.celzero.bravedns.util.Utilities.getRandomString
@@ -222,7 +220,8 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
         b.genSettingsGoLogDesc.text =
             Logger.LoggerLevel.fromId(persistentState.goLoggerLevel.toInt())?.name?.lowercase()
                 ?.replaceFirstChar(Char::titlecase)?.replace("_", " ")
-
+        // set log lifespan name in the description
+        b.genSettingsLogLifespanDesc.text = persistentState.logLifespan
 
         // for app locale (default system/user selected locale)
         if (isAtleastT()) {
@@ -587,9 +586,9 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
             logEvent("Check for app update set to $b")
         }
 
-        b.settingsPurgeLogRl.setOnClickListener {
-            enableAfterDelay(CLICK_DELAY_SHORT_MS, b.settingsPurgeLogRl)
-            showPurgeLogDialog()
+        b.settingsLogLifespanRl.setOnClickListener {
+            enableAfterDelay(CLICK_DELAY_SHORT_MS, b.settingsLogLifespanRl)
+            showLogLifespanDialog()
         }
 
         b.settingsGoLogRl.setOnClickListener {
@@ -791,28 +790,36 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
         logEvent("Firewall bubble disabled")
     }
 
-    private fun showPurgeLogDialog() {
+    private fun showLogLifespanDialog() {
         val alertBuilder = MaterialAlertDialogBuilder(this, R.style.App_Dialog_NoDim)
-        alertBuilder.setTitle(getString(R.string.settings_purge_log_heading))
+        alertBuilder.setTitle(getString(R.string.settings_log_lifespan_heading))
         val items =
             arrayOf(
-                getString(R.string.settings_purge_interval_dialog_option_0),
-                getString(R.string.settings_purge_interval_dialog_option_1),
-                getString(R.string.settings_purge_interval_dialog_option_2),
-                getString(R.string.settings_purge_interval_dialog_option_3),
-                getString(R.string.settings_purge_interval_dialog_option_4),
-                getString(R.string.settings_purge_interval_dialog_option_5),
-                getString(R.string.settings_purge_interval_dialog_option_6),
+                getString(R.string.settings_log_lifespan_dialog_option_0),
+                getString(R.string.settings_log_lifespan_dialog_option_1),
+                getString(R.string.settings_log_lifespan_dialog_option_2),
+                getString(R.string.settings_log_lifespan_dialog_option_3),
+                getString(R.string.settings_log_lifespan_dialog_option_4),
+                getString(R.string.settings_log_lifespan_dialog_option_5),
+                getString(R.string.settings_log_lifespan_dialog_option_6),
             )
-        val checkedItem = persistentState.logLifespan.toInt()
+        var checkedItem = -1
+        for (i in items) {
+            if (i == persistentState.logLifespan) {
+                checkedItem = items.indexOf(i)
+                break
+            }
+        }
         alertBuilder.setSingleChoiceItems(items, checkedItem) { dialog, which ->
             dialog.dismiss()
             if (checkedItem == which) {
                 return@setSingleChoiceItems
             }
 
-            persistentState.logLifespan = which.toLong()
-            logEvent("Log lifespan set to ${items[which]}")
+            var selectedItem = items[which]
+            b.genSettingsLogLifespanDesc.text = selectedItem
+            persistentState.logLifespan = selectedItem
+            logEvent("Log lifespan set to ${selectedItem}")
 
         }
 
