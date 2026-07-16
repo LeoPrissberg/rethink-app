@@ -790,7 +790,9 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
             if (checkedItem == which) {
                 return@setSingleChoiceItems
             }
-            return@setSingleChoiceItems
+
+            persistentState.logLifespan = which.toLong()
+            logEvent("Log lifespan set to ${items[which]}")
 
         }
 
