@@ -40,8 +40,8 @@ class PurgeConnectionLogs(val context: Context, workerParameters: WorkerParamete
     }
 
     override suspend fun doWork(): Result {
-        val logLifespanIndex = persistentState.logLifespan
-        val hoursToPurge = when(logLifespanIndex) {
+        val logLifespan = persistentState.logLifespan
+        val hoursToPurge = when(logLifespan) {
             "1 hour" -> -1
             "3 hours" -> -3
             "6 hours" -> -6
@@ -56,7 +56,7 @@ class PurgeConnectionLogs(val context: Context, workerParameters: WorkerParamete
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.HOUR_OF_DAY, hoursToPurge)
         val date = calendar.time.time
-        Logger.i(LOG_TAG_SCHEDULER, "purging logs older than 7 days, date: $date")
+        Logger.i(LOG_TAG_SCHEDULER, "purging logs older than $logLifespan, date: $date")
 
         /**
          * purge logs older than 7 days (on version v053l, subject to change in later versions based
