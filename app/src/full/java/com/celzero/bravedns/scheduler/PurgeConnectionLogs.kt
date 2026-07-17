@@ -68,7 +68,7 @@ class PurgeConnectionLogs(val context: Context, workerParameters: WorkerParamete
          * purge event logs older than 4 days, can be changed based on user configuration in later
          * versions.
          */
-         eventLogger.scheduleAutoPurge(NUMBER_OF_DAYS_TO_PURGE_EVENTS)
+         eventLogger.scheduleAutoPurge(hoursToPurge)
 
         return Result.success()
     }
