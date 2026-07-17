@@ -22,6 +22,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.celzero.bravedns.database.RefreshDatabase
 import com.celzero.bravedns.service.EventLogger
+import com.celzero.bravedns.service.PersistentState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.Calendar
@@ -32,17 +33,30 @@ class PurgeConnectionLogs(val context: Context, workerParameters: WorkerParamete
     private val refreshDatabase by inject<RefreshDatabase>()
     private val eventLogger by inject<EventLogger>()
 
+    private val persistentState by inject<PersistentState>()
+
     companion object {
-        const val NUMBER_OF_DAYS_TO_PURGE = -7
         const val NUMBER_OF_DAYS_TO_PURGE_EVENTS = 4
     }
 
     override suspend fun doWork(): Result {
+        val logLifespan = persistentState.logLifespan
+        val hoursToPurge = when(logLifespan) {
+            "1 hour" -> -1
+            "3 hours" -> -3
+            "6 hours" -> -6
+            "12 hours" -> -12
+            "1 day" -> -24
+            "3 days" -> -72
+            "7 days" -> -168
+            else -> -168 // 7 days (default)
+        }
+
         Logger.d(LOG_TAG_SCHEDULER, "starting purge-database job")
         val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS_TO_PURGE)
+        calendar.add(Calendar.HOUR_OF_DAY, hoursToPurge)
         val date = calendar.time.time
-        Logger.i(LOG_TAG_SCHEDULER, "purging logs older than 7 days, date: $date")
+        Logger.i(LOG_TAG_SCHEDULER, "purging logs older than $logLifespan, date: $date")
 
         /**
          * purge logs older than 7 days (on version v053l, subject to change in later versions based
