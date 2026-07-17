@@ -61,6 +61,7 @@ import com.celzero.bravedns.database.RefreshDatabase
 import com.celzero.bravedns.database.Severity
 import com.celzero.bravedns.databinding.ActivityMiscSettingsBinding
 import com.celzero.bravedns.net.go.GoVpnAdapter
+import com.celzero.bravedns.scheduler.WorkScheduler
 import com.celzero.bravedns.service.EventLogger
 import com.celzero.bravedns.service.PersistentState
 import com.celzero.bravedns.service.VpnController
@@ -109,6 +110,7 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
     private val appConfig by inject<AppConfig>()
     private val rdb by inject<RefreshDatabase>()
     private val eventLogger by inject<EventLogger>()
+    private val workScheduler by inject<WorkScheduler>()
 
     private var isThemeChanged: Boolean = false
     private var isHandlingBubbleToggle: Boolean = false
@@ -816,9 +818,10 @@ class MiscSettingsActivity : BaseActivity(R.layout.activity_misc_settings) {
                 return@setSingleChoiceItems
             }
 
-            var selectedItem = items[which]
+            val selectedItem = items[which]
             b.genSettingsLogLifespanDesc.text = selectedItem
             persistentState.logLifespan = selectedItem
+            workScheduler.schedulePurgeConnectionsLog()
             logEvent("Log lifespan set to ${selectedItem}")
 
         }
