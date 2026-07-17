@@ -126,20 +126,20 @@ class WorkScheduler(val context: Context) {
 
     fun schedulePurgeConnectionsLog() {
         val logLifespan = PersistentState(context.applicationContext).logLifespan
-        val hoursToPurge = when(logLifespan) {
+        val purgeInterval = when(logLifespan) {
           "1 hour" -> 1L
-          "3 hours" -> 3L
-          "6 hours" -> 6L
-          "12 hours" -> 12L
-          "1 day" -> 24L
-          "3 days" -> 72L
-          "7 days" -> 168L
-          else -> 168L // 7 days (default)
+          "3 hours" -> 1L
+          "6 hours" -> 3L
+          "12 hours" -> 6L
+          "1 day" -> 12L
+          "3 days" -> 24L
+          "7 days" -> 24L
+          else -> 24L // 7 days (default)
         }
         val purgeLogs =
             PeriodicWorkRequest.Builder(
                 PurgeConnectionLogs::class.java,
-                hoursToPurge,
+                purgeInterval,
                 TimeUnit.HOURS
             )
                 .addTag(PURGE_CONNECTION_LOGS_JOB_TAG)
