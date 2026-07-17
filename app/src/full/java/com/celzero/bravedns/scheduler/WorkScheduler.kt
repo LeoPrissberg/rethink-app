@@ -25,6 +25,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
+import com.celzero.bravedns.service.PersistentState
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
@@ -44,7 +45,6 @@ class WorkScheduler(val context: Context) {
         const val CONSOLE_LOG_SAVE_JOB_TAG = "ConsoleLogSaveJob"
 
         const val APP_EXIT_INFO_JOB_TIME_INTERVAL_DAYS: Long = 7
-        const val PURGE_LOGS_TIME_INTERVAL_HOURS: Long = 4
         const val PURGE_CONSOLE_LOGS_TIME_INTERVAL_HOURS: Long = 3
         const val BLOCKLIST_UPDATE_CHECK_INTERVAL_DAYS: Long = 3
         const val DATA_USAGE_TIME_INTERVAL_MINS: Long = 20
@@ -125,10 +125,21 @@ class WorkScheduler(val context: Context) {
     }
 
     fun schedulePurgeConnectionsLog() {
+        val logLifespan = PersistentState(context.applicationContext).logLifespan
+        val hoursToPurge = when(logLifespan) {
+          "1 hour" -> 1L
+          "3 hours" -> 3L
+          "6 hours" -> 6L
+          "12 hours" -> 12L
+          "1 day" -> 24L
+          "3 days" -> 72L
+          "7 days" -> 168L
+          else -> 168L // 7 days (default)
+        }
         val purgeLogs =
             PeriodicWorkRequest.Builder(
                 PurgeConnectionLogs::class.java,
-                PURGE_LOGS_TIME_INTERVAL_HOURS,
+                hoursToPurge,
                 TimeUnit.HOURS
             )
                 .addTag(PURGE_CONNECTION_LOGS_JOB_TAG)
