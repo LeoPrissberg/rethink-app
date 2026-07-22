@@ -59,14 +59,12 @@ class PurgeConnectionLogs(val context: Context, workerParameters: WorkerParamete
         Logger.i(LOG_TAG_SCHEDULER, "purging logs older than $logLifespan, date: $date")
 
         /**
-         * purge logs older than 7 days (on version v053l, subject to change in later versions based
-         * on user configuration) come up with user configuration to delete the user logs.(both
-         * ConnectionTracker and DNSLogs.
+         * Purge logs older than log lifespan.
+         * In the future, come up with user configuration to delete DNSLogs as well.
          */
         refreshDatabase.purgeConnectionLogs(date)
         /**
-         * purge event logs older than 4 days, can be changed based on user configuration in later
-         * versions.
+         * Purge event logs older than user-configured log lifespan.
          */
          eventLogger.scheduleAutoPurge(hoursToPurge)
 
